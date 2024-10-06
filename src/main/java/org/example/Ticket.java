@@ -1,13 +1,18 @@
 package org.example;
 
+import lombok.Getter;
+
 import java.time.OffsetDateTime;
 
 /**
  * Можно изменять по своему усмотрению, не нарушая правила приоритезации очереди
  */
-public class Ticket {
+@Getter
+public class Ticket implements Comparable<Ticket> {
 
     private static int idSeq;
+    public static final String PENSION = "pension";
+    public static final String OTHER = "other";
 
     /**
      * Автогенерация id
@@ -19,14 +24,28 @@ public class Ticket {
      * 1) pension
      * 2) любые другие
      */
-    String type;
+    private final String type;
 
     /**
      * Приоритет для ранней регистрации
      */
-    OffsetDateTime registerTime = OffsetDateTime.now();
+    private final OffsetDateTime registerTime;
 
-    public Ticket(String type) {
+    public Ticket(String type, OffsetDateTime registerTime) {
         this.type = type;
+        this.registerTime = registerTime;
+    }
+
+    @Override
+    public int compareTo(Ticket o) {
+        if (o.getType().equals(PENSION)) {
+            return this.getType().equals(PENSION) ? this.getRegisterTime().compareTo(o.getRegisterTime()) : 1;
+        }
+        return this.getType().equals(PENSION) ? -1 : this.getRegisterTime().compareTo(o.getRegisterTime());
+    }
+
+    @Override
+    public String toString() {
+        return "Ticket type " + type + "; date " + registerTime;
     }
 }

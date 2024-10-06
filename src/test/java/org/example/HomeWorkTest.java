@@ -2,6 +2,7 @@ package org.example;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,12 +18,32 @@ class HomeWorkTest {
 
     @Test
     void managerFabric() {
+        var manager = homeWork.managerFabric();
+        var now = OffsetDateTime.now();
+        var first = new Ticket(Ticket.PENSION, now);
+        var second = new Ticket(Ticket.OTHER, now.plusDays(1));
+        var third = new Ticket(Ticket.PENSION, now.plusDays(2));
+        var five = new Ticket(Ticket.OTHER, now.plusDays(3));
+        var six = new Ticket(Ticket.PENSION, now.plusDays(4));
+
+        manager.add(first);
+        manager.add(second);
+        manager.add(third);
+        manager.add(five);
+        manager.add(six);
+
+        assertEquals(first, manager.next());
+        assertEquals(third, manager.next());
+        assertEquals(six, manager.next());
+        assertEquals(second, manager.next());
+        assertEquals(five, manager.next());
     }
 
     @Test
     void check() {
-        List<Integer> expectedQueue = generateQueue(1, 4);
+        List<Integer> expectedQueue = generateQueue(1, 10);
         List<String> pairs = generatePairs(expectedQueue);
+        System.out.println(expectedQueue);
         assertEquals(expectedQueue, homeWork.check(pairs));
     }
 
